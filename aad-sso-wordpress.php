@@ -446,8 +446,11 @@ class AADSSO {
 				$user->add_role( $role );
 			}
 		}
-		else if ( null != $this->settings->default_wp_role || "" != $this->settings->default_wp_role ){
-			$user->set_role( $this->settings->default_wp_role );
+		else if ( null != $this->settings->default_wp_role || "" != $this->settings->default_wp_role ) {
+			if( ! in_array( 'administrator', $user->roles ) && ! in_array( 'editor', $user->roles ) ) {
+				$user->set_role( $this->settings->default_wp_role );
+				update_user_option( $user->ID, 'show_admin_bar_front', false );
+			}
 		}
 		else{
 			return new WP_Error(
